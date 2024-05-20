@@ -8,6 +8,25 @@
   <body>
     <div class="container">
       <h1>Check the weather in your city!</h1>
+      <form>
+        <div class="search">
+          <div class="col">
+            <input id="search-input" type="text" name="location" placeholder="Enter city name" required autofocus />
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn">Search</button>
+          </div>
+        </div>
+      </form>
+      <div class="weather">
+        <div id="celcius" class="temperature"></div>
+      </div>
+      <div class="location"></div>
+      <div class="info">
+        <div class="col humidity"></div>
+        <div class="col pressure"></div>
+      </div>
+      <div class="description"></div>
     </div>
   </body>
 </html>
