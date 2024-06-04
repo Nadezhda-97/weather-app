@@ -6,6 +6,7 @@ const elements = {
   input: document.getElementById('search-input'),
   button: document.querySelector('.btn'),
   weather: document.querySelector('.weather'),
+  image: document.querySelector('.weather-image'),
   location: document.querySelector('.location'),
   temperature: document.querySelector('.temperature'),
   details: document.querySelector('.details'),
