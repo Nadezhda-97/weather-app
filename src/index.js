@@ -1,5 +1,15 @@
+import * as yup from 'yup';
+import watcher from './view.js';
+
 const apiKey = '';
 const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?units=metric&lang=en';
+
+const validateData = (data) => {
+  const schema = yup.string().trim().required();
+  return schema.validate(data)
+    .then(() => null)
+    .catch((error) => error);
+};
 
 const elements = {
   form: document.getElementById('location-form'),
@@ -36,24 +46,26 @@ const state = {
   },
 };
 
+const watchedState = watcher(state, elements);
+
 const checkWeather = (location) => {
+  watchedState.loadingData = { status: 'loading', error: null };
   try {
     fetch(`${apiUrl}&q=${location}&appid=${apiKey}`)
       .then((response) => {
         const data = response.json();
-
         const { temp, humidity, pressure } = data.main;
         const { description, icon } = data.weather[0];
+
         const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
 
-        state.loadingData = { status: 'success', error: null };
-        state.location = data.name;
-        state.iconUrl = iconUrl;
-        state.info = { temperature: temp, humidity, pressure, description };
+        watchedState.loadingData = { status: 'success', error: null };
+        watchedState.location = data.name;
+        watchedState.iconUrl = iconUrl;
+        watchedState.info = { temperature: temp, humidity, pressure, description };
       })
   } catch (error) {
-    state.loadingData = { status: 'failed', error };
-    throw new Error('Unable to fetch weather data');
+    watchedState.loadingData = { status: 'failed', error };
   }
 };
 
@@ -62,5 +74,14 @@ elements.button.addEventListener('submit', (e) => {
   const formData = new FormData(e.target);
   const location = formData.get('location');
 
-  checkWeather(location);
+  validateData(location)
+    .then((error) => {
+      if (error) {
+        watchedState.form = { isValid: false, error: error.message };
+        return;
+      }
+
+      watchedState.form = { isValid: true, error: null };
+      checkWeather(location);
+    });
 });
