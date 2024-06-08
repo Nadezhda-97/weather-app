@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/Nadezhda-97/weather-app/issues"
   },
-  "homepage": "https://github.com/Nadezhda-97/weather-app#readme"
+  "homepage": "https://github.com/Nadezhda-97/weather-app#readme",
+  "dependencies": {
+    "on-change": "^5.0.1",
+    "yup": "^1.4.0"
+  }
 }
