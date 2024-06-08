@@ -1,0 +1,20 @@
+{
+  "name": "weather-app",
+  "version": "1.0.0",
+  "description": "The app to check out the current weather",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nadezhda-97/weather-app.git"
+  },
+  "author": "Nadezhda Nikitina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nadezhda-97/weather-app/issues"
+  },
+  "homepage": "https://github.com/Nadezhda-97/weather-app#readme"
+}
