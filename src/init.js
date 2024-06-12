@@ -11,9 +11,49 @@ const validateData = (data) => {
     .catch((error) => error);
 };
 
+const checkWeather = (location, watchedState) => {
+  watchedState.loadingData = { status: 'loading', error: null };
+  try {
+    fetch(`${apiUrl}&q=${location}&appid=${apiKey}`)
+      .then((response) => {
+        if (!response.ok) {
+          watchedState.loadingData = { status: 'failed', error: 'yes' };
+          console.log('watchedState in error', watchedState);
+          return;
+        } else {
+          const data = response.json();
+          return data;
+        }
+      })
+      .then((data) => {
+        console.log('state in checkWeather before data ->', watchedState);
+        console.log('data.main ->', data.main);
+        console.log('data.weather[0] ->', data.weather[0]);
+        console.log('data.main.temp ->', data.main.humidity);
+        console.log('data.weather[0].description ->', data.weather[0].description);
+        const { humidity, pressure, temp } = data.main;
+        const { description, icon } = data.weather[0];
+
+        const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+
+        watchedState.loadingData = { status: 'success', error: null };
+        console.log('success');
+        watchedState.info = { temperature: temp, humidity, pressure, description };
+        console.log('info');
+        watchedState.location = data.name;
+        console.log('location');
+        watchedState.iconUrl = iconUrl;
+        console.log('iconUrl');
+        console.log('state in checkWeather after data -> ', watchedState);
+      })
+  } catch (error) {
+    watchedState.loadingData = { status: 'failed', error };
+  }
+};
+
 const init = () => {
   const elements = {
-    form: document.getElementById('location-form'),
+    form: document.querySelector('.location-form'),
     input: document.getElementById('search-input'),
     button: document.querySelector('.btn'),
 
@@ -51,28 +91,7 @@ const init = () => {
 
   const watchedState = watcher(state, elements);
 
-  const checkWeather = (location) => {
-    watchedState.loadingData = { status: 'loading', error: null };
-    try {
-      fetch(`${apiUrl}&q=${location}&appid=${apiKey}`)
-        .then((response) => {
-          const data = response.json();
-          const { temp, humidity, pressure } = data.main;
-          const { description, icon } = data.weather[0];
-
-          const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
-
-          watchedState.loadingData = { status: 'success', error: null };
-          watchedState.location = data.name;
-          watchedState.iconUrl = iconUrl;
-          watchedState.info = { temperature: temp, humidity, pressure, description };
-        })
-    } catch (error) {
-      watchedState.loadingData = { status: 'failed', error };
-    }
-  };
-
-  elements.button.addEventListener('submit', (e) => {
+  elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const location = formData.get('location');
@@ -85,7 +104,7 @@ const init = () => {
         }
 
         watchedState.form = { isValid: true, error: null };
-        checkWeather(location);
+        checkWeather(location, watchedState);
       });
   });
 };
