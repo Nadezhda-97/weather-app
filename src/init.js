@@ -13,57 +13,44 @@ const validateData = (data) => {
 
 const checkWeather = (location, watchedState) => {
   watchedState.loadingData = { status: 'loading', error: null };
-  try {
-    fetch(`${apiUrl}&q=${location}&appid=${apiKey}`)
-      .then((response) => {
-        if (!response.ok) {
-          watchedState.loadingData = { status: 'failed', error: 'yes' };
-          console.log('watchedState in error', watchedState);
-          return;
-        } else {
-          const data = response.json();
-          return data;
-        }
-      })
-      .then((data) => {
-        console.log('state in checkWeather before data ->', watchedState);
-        console.log('data.main ->', data.main);
-        console.log('data.weather[0] ->', data.weather[0]);
-        console.log('data.main.temp ->', data.main.humidity);
-        console.log('data.weather[0].description ->', data.weather[0].description);
-        const { humidity, pressure, temp } = data.main;
-        const { description, icon } = data.weather[0];
+  fetch(`${apiUrl}&q=${location}&appid=${apiKey}`)
+    .then((response) => {
+      if (!response.ok) {
+        const error = new Error('Network response was not ok');
+        error.name = 'ResponseError';
+        throw error;
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const { humidity, pressure, temp } = data.main;
+      const { description, icon } = data.weather[0];
 
-        const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+      const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
 
-        watchedState.loadingData = { status: 'success', error: null };
-        console.log('success');
-        watchedState.info = { temperature: temp, humidity, pressure, description };
-        console.log('info');
-        watchedState.location = data.name;
-        console.log('location');
-        watchedState.iconUrl = iconUrl;
-        console.log('iconUrl');
-        console.log('state in checkWeather after data -> ', watchedState);
-      })
-  } catch (error) {
-    watchedState.loadingData = { status: 'failed', error };
-  }
+      watchedState.loadingData = { status: 'success', error: null };
+      watchedState.info = { temperature: temp, humidity, pressure, description };
+      watchedState.location = data.name;
+      watchedState.iconUrl = iconUrl;
+    })
+    .catch((error) => {
+      watchedState.loadingData = { status: 'failed', error: 'yes' };
+      console.error(error);
+      console.log('error in catch, name ->', error.name);
+      console.log('error in catch, message ->', error.message);
+    })
 };
 
 const init = () => {
   const elements = {
     form: document.querySelector('.location-form'),
     input: document.getElementById('search-input'),
-    button: document.querySelector('.btn'),
-
     weather: document.querySelector('.weather'),
     image: document.querySelector('.weather-image'),
     location: document.querySelector('.location'),
     temperature: document.querySelector('.temperature'),
     details: document.querySelector('.details'),
     description: document.querySelector('.description'),
-
     error: document.querySelector('.error'),
   };
 
