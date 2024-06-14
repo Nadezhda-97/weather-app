@@ -20,8 +20,8 @@
   },
   "homepage": "https://github.com/Nadezhda-97/weather-app#readme",
   "dependencies": {
-    "on-change": "^5.0.1",
-    "yup": "^1.4.0"
+    "i18next": "^23.11.5",
+    "on-change": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
