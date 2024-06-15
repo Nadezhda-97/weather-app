@@ -31,42 +31,29 @@ const createDetail = (state, detail, way) => {
   return col;
 };
 
-const renderForm = (value, elements) => {
-  const { error, image, temperature, location, details, description } = elements;
-  if (value.isValid === false) {
-    image.textContent = '';
-    temperature.textContent = '';
-    location.textContent = '';
-    details.textContent = '';
-    description.textContent = '';
+const renderLoadingData = (value, elements, i18nextInstance) => {
+  const { status, error } = value;
+  const { form, input, button, errorText } = elements;
 
-    const errorText = document.createElement('p');
-    errorText.textContent = 'Invalid city name. Please, check again';
-    error.prepend(errorText);
-  } else {
-    error.textContent = '';
-  }
-};
+  errorText.textContent = '';
 
-const renderLoadingData = (value, elements) => {
-  const { form, input, button, error } = elements;
-
-  if (value.status === 'loading') {
+  if (status === 'loading') {
     input.setAttribute('readonly', 'readonly');
     button.setAttribute('disabled', 'disabled');
   }
 
-  if (value.status === 'success') {
+  if (status === 'success') {
     input.removeAttribute('readonly');
     button.removeAttribute('disabled');
     form.reset();
     input.focus();
   }
 
-  if (value.status === 'failed') {
+  if (status === 'failed') {
     input.removeAttribute('readonly');
     button.removeAttribute('disabled');
-    error.textContent = 'Connection error. Please, try again!';
+    errorText.textContent = i18nextInstance.t(`errors.${error}`);
+    input.focus();
   }
 };
 
@@ -86,7 +73,7 @@ const renderWeather = (state, elements) => {
 
   const celciusDiv = document.createElement('div');
   celciusDiv.setAttribute('id', 'celcius');
-  celciusDiv.textContent = `${state.info.temperature.toFixed(2)} °C`;
+  celciusDiv.textContent = `${Math.round(state.info.temperature)}°C`;
   temperature.prepend(celciusDiv);
 
   location.textContent = state.location;
@@ -100,13 +87,10 @@ const renderWeather = (state, elements) => {
   description.textContent = state.info.description;
 };
 
-const watcher = (state, elements) => onChange(state, (path, value) => {
+const watcher = (state, elements, i18nextInstance) => onChange(state, (path, value) => {
   switch (path) {
-    case 'form':
-      renderForm(value, elements);
-      break;
     case 'loadingData':
-      renderLoadingData(value, elements);
+      renderLoadingData(value, elements, i18nextInstance);
       break;
     case 'location':
     case 'iconUrl':

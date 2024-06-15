@@ -1,14 +1,20 @@
-import * as yup from 'yup';
+import i18next from 'i18next';
+
+import resources from './locales/locale.js';
 import watcher from './view.js';
 
 const apiKey = 'db1d0fea490bdb2fd095dcd7e3098257';
 const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?units=metric&lang=en';
 
-const validateData = (data) => {
-  const schema = yup.string().trim().required();
-  return schema.validate(data)
-    .then(() => null)
-    .catch((error) => error);
+const handleError = (error) => {
+  switch (error.name) {
+    case 'ResponseError':
+      return 'responseError';
+    case 'TypeError':
+      return 'connectionError';
+    default:
+      return 'unknownError';
+  }
 };
 
 const checkWeather = (location, watchedState) => {
@@ -34,32 +40,33 @@ const checkWeather = (location, watchedState) => {
       watchedState.iconUrl = iconUrl;
     })
     .catch((error) => {
-      watchedState.loadingData = { status: 'failed', error: 'yes' };
+      watchedState.loadingData = { status: 'failed', error: handleError(error) };
       console.error(error);
-      console.log('error in catch, name ->', error.name);
-      console.log('error in catch, message ->', error.message);
     })
 };
 
-const init = () => {
+const init = async () => {
+  const i18nextInstance = i18next.createInstance();
+  await i18nextInstance.init({
+    lng: 'en',
+    debug: true,
+    resources,
+  });
+
   const elements = {
     form: document.querySelector('.location-form'),
     input: document.getElementById('search-input'),
+    button: document.querySelector('.btn'),
     weather: document.querySelector('.weather'),
     image: document.querySelector('.weather-image'),
     location: document.querySelector('.location'),
     temperature: document.querySelector('.temperature'),
     details: document.querySelector('.details'),
     description: document.querySelector('.description'),
-    error: document.querySelector('.error'),
+    errorText: document.querySelector('.errorText'),
   };
 
   const state = {
-    form: {
-      isValid: null,
-      error: null,
-    },
-
     loadingData: {
       status: 'filling',
       error: null,
@@ -76,23 +83,14 @@ const init = () => {
     },
   };
 
-  const watchedState = watcher(state, elements);
+  const watchedState = watcher(state, elements, i18nextInstance);
 
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const location = formData.get('location');
 
-    validateData(location)
-      .then((error) => {
-        if (error) {
-          watchedState.form = { isValid: false, error: error.message };
-          return;
-        }
-
-        watchedState.form = { isValid: true, error: null };
-        checkWeather(location, watchedState);
-      });
+    checkWeather(location, watchedState);
   });
 };
 
