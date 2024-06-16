@@ -37,7 +37,11 @@ export default {
           },
         },
       },
-      { test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'] },
+      { test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader', 'style-loader', 'postcss-loader'] },
+      {
+        test: /\.scss$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
+      },
       {
         test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: 'url-loader?limit=10000',
