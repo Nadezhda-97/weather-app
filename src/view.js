@@ -52,7 +52,9 @@ const renderLoadingData = (value, elements, i18nextInstance) => {
   if (status === 'failed') {
     input.removeAttribute('readonly');
     button.removeAttribute('disabled');
-    errorText.textContent = i18nextInstance.t(`errors.${error}`);
+    const p = document.createElement('p');
+    p.textContent = i18nextInstance.t(`errors.${error}`);
+    errorText.prepend(p);
     input.focus();
   }
 };
