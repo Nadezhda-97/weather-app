@@ -6,6 +6,14 @@ const pressureImgWay = '';
 const detailType1 = 'humidity';
 const detailType2 = 'pressure';
 
+const capitalizeDesc = (description) => {
+  if (!description) {
+    return description;
+  }
+
+  return description[0].toUpperCase() + description.slice(1);
+};
+
 const createDetail = (state, detail, way) => {
   const col = document.createElement('div');
   col.classList.add('col');
@@ -86,7 +94,7 @@ const renderWeather = (state, elements) => {
   const pressure = createDetail(state, detailType2, pressureImgWay);
   details.append(pressure);
 
-  description.textContent = state.info.description;
+  description.textContent = capitalizeDesc(state.info.description);
 };
 
 const watcher = (state, elements, i18nextInstance) => onChange(state, (path, value) => {
