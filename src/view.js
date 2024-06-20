@@ -94,7 +94,8 @@ const renderWeather = (state, elements) => {
   const pressure = createDetail(state, detailType2, pressureImgWay);
   details.append(pressure);
 
-  description.textContent = capitalizeDesc(state.info.description);
+  const textFeelsLike = `Feels like ${Math.round(state.info.feelsLike)}°C. `;
+  description.textContent = textFeelsLike + capitalizeDesc(state.info.description);
 };
 
 const watcher = (state, elements, i18nextInstance) => onChange(state, (path, value) => {
