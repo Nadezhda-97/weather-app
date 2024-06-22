@@ -31,11 +31,12 @@ const checkWeather = (location, watchedState) => {
     .then((data) => {
       const { humidity, pressure, temp, feels_like: feelsLike } = data.main;
       const { description, icon } = data.weather[0];
+      const { speed: wind } = data.wind;
 
       const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
 
       watchedState.loadingData = { status: 'success', error: null };
-      watchedState.info = { temperature: temp, feelsLike, humidity, pressure, description };
+      watchedState.info = { temperature: temp, feelsLike, humidity, pressure, description, wind };
       watchedState.location = data.name;
       watchedState.iconUrl = iconUrl;
     })
@@ -81,6 +82,7 @@ const init = async () => {
       humidity: null,
       pressure: null,
       description: '',
+      wind: null,
     },
   };
 
