@@ -1,12 +1,12 @@
 import onChange from 'on-change';
 
-const humidityImgWay = '';
-const pressureImgWay = '';
-const windImgWay = '';
+import humidityImage from './assets/humidity.png';
+import windImage from './assets/wind.png';
+import pressureImage from './assets/pressure.png';
 
-const detailType1 = 'humidity';
-const detailType2 = 'pressure';
-const detailType3 = 'wind';
+const type1 = 'humidity';
+const type2 = 'wind';
+const type3 = 'pressure';
 
 const capitalizeDesc = (description) => {
   if (!description) {
@@ -16,8 +16,8 @@ const capitalizeDesc = (description) => {
   return description[0].toUpperCase() + description.slice(1);
 };
 
-const convertData = (state, detail) => {
-  switch (detail) {
+const convertData = (state, type) => {
+  switch (type) {
     case 'humidity':
       return `${state.info.humidity}%`;
     case 'pressure':
@@ -29,13 +29,13 @@ const convertData = (state, detail) => {
   }
 };
 
-const createDetail = (state, detail, way) => {
+const createDetail = (state, type, way) => {
   const col = document.createElement('div');
   col.classList.add('col');
 
   const image = document.createElement('img');
   image.setAttribute('src', `${way}`);
-  image.setAttribute('alt', `${detail} icon`);
+  image.setAttribute('alt', `${type} icon`);
   col.prepend(image);
 
   const div = document.createElement('div');
@@ -43,8 +43,8 @@ const createDetail = (state, detail, way) => {
   col.append(div);
 
   const p1 = document.createElement('p');
-  p1.classList.add(`${detail}`);
-  p1.textContent = `${convertData(state, detail)}`;
+  p1.classList.add(`${type}`);
+  p1.textContent = `${convertData(state, type)}`;
   div.prepend(p1);
 
   const p2 = document.createElement('p');
@@ -102,15 +102,15 @@ const renderWeather = (state, elements) => {
 
   location.textContent = state.location;
 
-  const { col: humidity, p2: parHumidity } = createDetail(state, detailType1, humidityImgWay);
+  const { col: humidity, p2: parHumidity } = createDetail(state, type1, humidityImage);
   parHumidity.textContent = 'Humidity';
   details.prepend(humidity);
 
-  const { col: wind, p2: parWind } = createDetail(state, detailType3, windImgWay);
+  const { col: wind, p2: parWind } = createDetail(state, type2, windImage);
   parWind.textContent = 'Wind';
   details.append(wind);
 
-  const { col: pressure, p2: parPressure } = createDetail(state, detailType2, pressureImgWay);
+  const { col: pressure, p2: parPressure } = createDetail(state, type3, pressureImage);
   parPressure.textContent = 'Air pressure';
   details.append(pressure);
 
