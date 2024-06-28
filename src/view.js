@@ -55,7 +55,12 @@ const createDetail = (state, type, way) => {
 
 const renderLoadingData = (value, elements, i18nextInstance) => {
   const { status, error } = value;
-  const { form, input, button, errorText } = elements;
+  const {
+    form,
+    input,
+    button,
+    errorText,
+  } = elements;
 
   errorText.textContent = '';
 
@@ -82,7 +87,14 @@ const renderLoadingData = (value, elements, i18nextInstance) => {
 };
 
 const renderWeather = (state, elements) => {
-  const { image, location, temperature, details, description } = elements;
+  const {
+    image,
+    location,
+    temperature,
+    details,
+    description,
+  } = elements;
+
   image.textContent = '';
   temperature.textContent = '';
   location.textContent = '';
