@@ -1,3 +1,5 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/d7221e887361c35c7095/maintainability)](https://codeclimate.com/github/Nadezhda-97/weather-app/maintainability)
+
 # Weather App
 An application where you can find out the current weather in any city, region or country.
 
