@@ -1,3 +1,6 @@
+$back_color: #e8f0fd;
+$style_1: italic;
+
 * {
   margin: 0;
   padding: 0;
@@ -20,7 +23,7 @@
 .location-form input {
   border: 0;
   outline: 0;
-  background: #e8f0fd;
+  background: $back_color;
   color: #555;
   padding: 5px 10px;
   flex: 1;
@@ -54,6 +57,7 @@
   font-size: 45px;
   font-weight: 400;
   margin-top: -10px;
+  font-style: $style_1;
 }
 
 .details {
